@@ -28,7 +28,7 @@ export const signUp=async (req,res)=>{
             name ,
             email ,
             password:hashPassword ,
-            role,
+            role,  
            
             })
         let token = await genToken(user._id)
@@ -71,10 +71,6 @@ export const login=async(req,res)=>{
         return res.status(500).json({message:`login Error ${error}`})
     }
 }
-
-
-
-
 export const logOut = async(req,res)=>{
     try {
         await res.clearCookie("token")
@@ -83,8 +79,6 @@ export const logOut = async(req,res)=>{
         return res.status(500).json({message:`logout Error ${error}`})
     }
 }
-
-
 export const googleSignup = async (req,res) => {
     try {
         const {name , email , role} = req.body
@@ -110,7 +104,6 @@ export const googleSignup = async (req,res) => {
     }
     
 }
-
 export const sendOtp = async (req,res) => {
     try {
         const {email} = req.body

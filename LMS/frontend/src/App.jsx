@@ -29,7 +29,7 @@ import getAllReviews from './customHooks/getAllReviews'
 export const serverUrl = "http://localhost:8000"
 
 function App() {
-  
+   
   let {userData} = useSelector(state=>state.user)
 
   getCurrentUser()

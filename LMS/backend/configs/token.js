@@ -6,6 +6,4 @@ try {
 } catch (error) {
     console.log("token error")
 }
-
-
 }
