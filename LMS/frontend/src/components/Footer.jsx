@@ -11,7 +11,7 @@ const Footer = () => {
         {/* Logo + Description */}
         <div className="lg:w-[40%] md:w-[50%] w-[100%]">
           <img src={logo} alt="Logo" className="h-10 mb-3 border-1 rounded-[5px]" />
-          <h2 className="text-xl font-bold text-white mb-3">Virtual Courses</h2>
+          <h2 className="text-xl font-bold text-white mb-3">Edu Sphere</h2>
           <p className="text-sm">
             AI-powered learning platform to help you grow smarter. Learn anything, anytime, anywhere.
           </p>

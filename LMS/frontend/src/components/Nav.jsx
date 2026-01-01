@@ -1,89 +1,169 @@
-import React, { useState } from 'react'
-import logo from "../assets/logo.jpg"
+import React, { useState } from "react";
+import logo from "../assets/logo.jpg";
 import { IoMdPerson } from "react-icons/io";
-import { GiHamburgerMenu } from "react-icons/gi";
-import { GiSplitCross } from "react-icons/gi";
+import { GiHamburgerMenu, GiSplitCross } from "react-icons/gi";
+import { useNavigate } from "react-router-dom";
+import { serverUrl } from "../App";
+import axios from "axios";
+import { toast } from "react-toastify";
+import { useDispatch, useSelector } from "react-redux";
+import { setUserData } from "../redux/userSlice";
 
-import { useNavigate } from 'react-router-dom';
-import { serverUrl } from '../App';
-import axios from 'axios';
-import { toast } from 'react-toastify';
-import { useDispatch, useSelector } from 'react-redux';
-import { setUserData } from '../redux/userSlice';
 function Nav() {
-  let [showHam,setShowHam] = useState(false)
-  let [showPro,setShowPro] = useState(false)
-  let navigate = useNavigate()
-  let dispatch = useDispatch()
-  let {userData} = useSelector(state=>state.user)
+  const [showHam, setShowHam] = useState(false);
+  const [showPro, setShowPro] = useState(false);
+
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { userData } = useSelector((state) => state.user);
 
   const handleLogout = async () => {
     try {
-      const result = await axios.get(serverUrl + "/api/auth/logout" , {withCredentials:true})
-      console.log(result.data)
-     await dispatch(setUserData(null))
-      toast.success("LogOut Successfully")
+      await axios.get(`${serverUrl}/api/auth/logout`, {
+        withCredentials: true,
+      });
+      dispatch(setUserData(null));
+      toast.success("Logout successful");
+      navigate("/login");
     } catch (error) {
-      console.log(error.response.data.message)
+      toast.error("Logout failed", error);
     }
-  }
+  };
+
   return (
-    <div>
-    <div className='w-[100%] h-[70px] fixed top-0 px-[20px] py-[10px] flex items-center justify-between bg-[#00000047]  z-10'>
-     <div className='lg:w-[20%] w-[40%] lg:pl-[50px] '>
-        <img src={logo} className=' w-[60px]  rounded-[5px] border-2 border-white cursor-pointer' onClick={()=>navigate("/")} alt="" />
-      
-     </div>
-     
-     <div className='w-[30%] lg:flex items-center justify-center gap-4 hidden'>
+    <>
+      {/* NAV BAR */}
+      <nav className="w-full h-[70px] fixed top-0 px-5 py-2 flex items-center justify-between bg-[#00000047] z-50">
+        {/* LOGO */}
+        <img
+          src={logo}
+          alt="Logo"
+          className="w-[60px] rounded-md border-2 border-white cursor-pointer"
+          onClick={() => navigate("/")}
+        />
 
-        
-        {!userData ? <IoMdPerson className='w-[50px] h-[50px] fill-white cursor-pointer border-[2px] border-[#fdfbfb] bg-[#000000d5] rounded-full p-[10px]'onClick={()=>setShowPro(prev=>!prev)}/>:
+        {/* DESKTOP MENU */}
+        <div className="hidden lg:flex items-center gap-4 text-white">
+          {!userData && (
+            <span
+              onClick={() => navigate("/login")}
+              className="px-6 py-2 border border-white rounded-lg cursor-pointer hover:bg-white hover:text-black transition"
+            >
+              Login
+            </span>
+          )}
 
-        
-        
-       <div className='w-[50px] h-[50px] rounded-full text-white flex items-center justify-center text-[20px] border-2 bg-black  border-white cursor-pointer' onClick={()=>setShowPro(prev=>!prev)}>
-         {userData.photoUrl ? <img src={userData.photoUrl} className='w-[100%] h-[100%] rounded-full object-cover' alt="" />
-         :
-         <div className='w-[50px] h-[50px] rounded-full text-white flex items-center justify-center text-[20px] border-2 bg-black  border-white cursor-pointer' >{userData?.name.slice(0,1).toUpperCase()}</div>}
-          </div>}
-           {userData?.role == "educator" ? <div className='px-[20px] py-[10px] border-2 lg:border-white border-black lg:text-white bg-[black] text-black rounded-[10px] text-[18px] font-light flex gap-2 cursor-pointer' onClick={()=>navigate("/dashboard")}>Dashboard</div>
-           :""}
-        {!userData && <span className='px-[20px] py-[10px] border-2 border-white text-white rounded-[10px] text-[18px] font-light cursor-pointer bg-[#000000d5] ' onClick={()=>navigate("/login")}>Login</span>}
-        {userData && <span className='px-[20px] py-[10px] bg-white text-black rounded-[10px] shadow-sm shadow-black text-[18px] cursor-pointer' onClick={handleLogout}>LogOut</span>}
-       
+          {userData && (
+            <>
+              {/* PROFILE ICON */}
+              <div
+                onClick={() => setShowPro((prev) => !prev)}
+                className="w-[45px] h-[45px] rounded-full border-2 border-white flex items-center justify-center cursor-pointer"
+              >
+                {userData.photoUrl ? (
+                  <img
+                    src={userData.photoUrl}
+                    alt="Profile"
+                    className="w-full h-full rounded-full object-cover"
+                  />
+                ) : (
+                  <span className="text-lg font-bold">
+                    {userData.name?.[0]?.toUpperCase()}
+                  </span>
+                )}
+              </div>
 
-     </div>
-     {showPro && <div className=' absolute top-[110%] right-[15%] flex items-center flex-col justify-center gap-2 text-[16px] rounded-md bg-[white] px-[15px] py-[10px] border-[2px]  border-black hover:border-white hover:text-white cursor-pointer hover:bg-black  ' >
-      <span className='bg-[black] text-white  px-[30px] py-[10px] rounded-2xl hover:bg-gray-600' onClick={()=>navigate("/profile")}>My Profile</span>
-      <span className='bg-[black] text-white hover:bg-gray-600  px-[25px] py-[10px] rounded-2xl' onClick={()=>navigate("/enrolledcourses")}>My Courses</span>
-       </div>}
-     <GiHamburgerMenu className='w-[30px] h-[30px] lg:hidden fill-white cursor-pointer ' onClick={()=>setShowHam(prev=>!prev)}/>
-      
-     
-    </div>
-    <div className={`fixed  top-0 w-[100vw] h-[100vh] bg-[#000000d6] flex items-center justify-center flex-col gap-5 z-10 ${showHam?"translate-x-[0%] transition duration-600  ease-in-out" :"translate-x-[-100%] transition duration-600  ease-in-out"}`}>
-     <GiSplitCross  className='w-[35px] h-[35px] fill-white absolute top-5 right-[4%]' onClick={()=>setShowHam(prev=>!prev)}/>
-      {!userData ? <IoMdPerson className='w-[50px] h-[50px] fill-white cursor-pointer border-[2px] border-[#fdfbfb7a] bg-[#000000d5] rounded-full p-[10px]'/>:
-      <div className='w-[50px] h-[50px] rounded-full text-white flex items-center justify-center text-[20px] border-2 bg-black  border-white cursor-pointer' onClick={()=>setShowPro(prev=>!prev)}>
-         {userData.photoUrl ? <img src={userData.photoUrl} className='w-[100%] h-[100%] rounded-full object-cover ' alt="" />
-         :
-         <div className='w-[50px] h-[50px] rounded-full text-white flex items-center justify-center text-[20px] border-2 bg-black  border-white cursor-pointer' >{userData?.name.slice(0,1).toUpperCase()}</div>}</div>
-      }
-      
-      <span className='flex items-center justify-center gap-2  text-white border-[2px] border-[#fdfbfb7a] bg-[#000000d5] rounded-lg px-[65px] py-[20px] text-[18px] ' onClick={()=>navigate("/profile")}>My Profile </span>
-      <span className='flex items-center justify-center gap-2  text-white border-[2px] border-[#fdfbfb7a] bg-[#000000d5] rounded-lg px-[65px] py-[20px] text-[18px] ' onClick={()=>navigate("/enrolledcourses")}>My Courses </span>
-      
-      {userData?.role == "educator" ? <div className='flex items-center justify-center gap-2 text-[18px] text-white border-[2px] border-[#fdfbfb7a] bg-[#000000d5] rounded-lg px-[60px] py-[20px]' onClick={()=>navigate("/dashboard")}>Dashboard</div>
-           :""}
-      {!userData ?<span className='flex items-center justify-center gap-2 text-[18px] text-white border-[2px] border-[#fdfbfb7a] bg-[#000000d5] rounded-lg px-[80px] py-[20px]' onClick={()=>navigate("/login")}>Login</span>:
-      <span className='flex items-center justify-center gap-2 text-[18px] text-white border-[2px] border-[#fdfbfb7a] bg-[#000000d5] rounded-lg px-[75px] py-[20px]' onClick={handleLogout}>LogOut</span>}
-    
+              {/* DASHBOARD (EDUCATOR ONLY) */}
+              {userData.role === "educator" && (
+                <span
+                  onClick={() => navigate("/dashboard")}
+                  className="px-6 py-2 border border-white rounded-lg cursor-pointer hover:bg-white hover:text-black transition"
+                >
+                  Dashboard
+                </span>
+              )}
 
-    </div>
-   </div>
-      
-  )
+              {/* LOGOUT */}
+              <span
+                onClick={handleLogout}
+                className="px-6 py-2 bg-white text-black rounded-lg cursor-pointer hover:bg-gray-200 transition"
+              >
+                Logout
+              </span>
+            </>
+          )}
+        </div>
+
+        {/* HAMBURGER ICON */}
+        <GiHamburgerMenu
+          className="lg:hidden w-7 h-7 fill-white cursor-pointer"
+          onClick={() => setShowHam(true)}
+        />
+      </nav>
+
+      {/* PROFILE DROPDOWN */}
+      {showPro && (
+        <div className="absolute top-[80px] right-10 bg-white text-black rounded-md p-3 z-50 shadow-md">
+          <span
+            className="block px-4 py-2 cursor-pointer hover:bg-gray-200"
+            onClick={() => navigate("/profile")}
+          >
+            My Profile
+          </span>
+          <span
+            className="block px-4 py-2 cursor-pointer hover:bg-gray-200"
+            onClick={() => navigate("/enrolledcourses")}
+          >
+            My Courses
+          </span>
+        </div>
+      )}
+
+      {/* MOBILE MENU */}
+      {showHam && (
+        <div className="fixed inset-0 bg-black bg-opacity-90 z-50 flex flex-col items-center justify-center gap-6 text-white">
+          <GiSplitCross
+            className="absolute top-5 right-5 w-8 h-8 fill-white cursor-pointer"
+            onClick={() => setShowHam(false)}
+          />
+
+          {userData && (
+            <span
+              onClick={() => navigate("/profile")}
+              className="text-xl cursor-pointer"
+            >
+              My Profile
+            </span>
+          )}
+
+          {userData?.role === "educator" && (
+            <span
+              onClick={() => navigate("/dashboard")}
+              className="text-xl cursor-pointer"
+            >
+              Dashboard
+            </span>
+          )}
+
+          {!userData ? (
+            <span
+              onClick={() => navigate("/login")}
+              className="text-xl cursor-pointer"
+            >
+              Login
+            </span>
+          ) : (
+            <span
+              onClick={handleLogout}
+              className="text-xl cursor-pointer"
+            >
+              Logout
+            </span>
+          )}
+        </div>
+      )}
+    </>
+  );
 }
 
-export default Nav
+export default Nav;
