@@ -26,7 +26,7 @@ import ViewLecture from './pages/ViewLecture'
 import SearchWithAi from './pages/SearchWithAi'
 import getAllReviews from './customHooks/getAllReviews'
 
-export const serverUrl = "https://edu-flex0-55hx.vercel.app"
+export const serverUrl = "https://eduflex0-production.up.railway.app";
 
 function App() {
    
