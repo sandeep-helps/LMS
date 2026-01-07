@@ -2,7 +2,7 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import validator from "validator";
 
-import User from "../models/User.js";
+import User from "../models/userModel.js";
 import sendMail from "../configs/Mail.js";
 
 /* =========================
@@ -27,7 +27,7 @@ const cookieOptions = {
 /* =========================
    SIGNUP
 ========================= */
-export const signup = async (req, res) => {
+export const signUp = async (req, res) => {
   try {
     const { name, email, password } = req.body;
 
@@ -104,7 +104,7 @@ export const login = async (req, res) => {
 /* =========================
    LOGOUT
 ========================= */
-export const logout = async (req, res) => {
+export const logOut = async (req, res) => {
   try {
     res.clearCookie("token", cookieOptions);
 
