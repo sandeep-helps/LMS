@@ -16,7 +16,8 @@ let app = express()
 app.use(express.json())
 app.use(cookieParser())
 app.use(cors({
-    origin:["http://localhost:5174","http://localhost:5173","http://localhost:3000","https://edu-flex0.vercel.app"],
+    origin:["http://localhost:5174","http://localhost:5173","http://localhost:3000","https://edu-flex0-git-main-avnishs-projects-700a73fb.vercel.app"
+],
     credentials:true
 }))
 app.use("/api/auth", authRouter)
