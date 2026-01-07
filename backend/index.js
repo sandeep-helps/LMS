@@ -27,22 +27,39 @@ connectDb();
 app.use(express.json());
 app.use(cookieParser());
 
+/* =========================
+   CORS CONFIGURATION
+========================= */
+const allowedOrigins = [
+  "http://localhost:3000",
+  "http://localhost:5173",
+  "http://localhost:5174",
+  "https://edu-flex0.vercel.app",
+];
+
 app.use(
   cors({
-    origin: [
-      "http://localhost:5173",
-      "http://localhost:5174",
-      "http://localhost:3000",
-      "https://edu-flex0-git-main-avnishs-projects-700a73fb.vercel.app",
-      "https://eduflex0.vercel.app" // optional future domain
-    ],
+    origin: (origin, callback) => {
+      // Allow server-to-server & tools like Postman
+      if (!origin) return callback(null, true);
+
+      // Allow listed origins & all Vercel preview URLs
+      if (
+        allowedOrigins.includes(origin) ||
+        origin.endsWith(".vercel.app")
+      ) {
+        return callback(null, true);
+      }
+
+      return callback(new Error("Not allowed by CORS"));
+    },
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
 
-// 🔴 REQUIRED FOR CORS PREFLIGHT (VERY IMPORTANT)
+// ✅ REQUIRED for preflight requests
 app.options("*", cors());
 
 /* =========================
