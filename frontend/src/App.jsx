@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import { useSelector } from "react-redux";
@@ -23,10 +23,11 @@ import SearchWithAi from "./pages/SearchWithAi";
 
 import ScrollToTop from "./components/ScrollToTop";
 
-import getCurrentUser from "./customHooks/getCurrentUser";
-import getCouseData from "./customHooks/getCouseData";
-import getCreatorCourseData from "./customHooks/getCreatorCourseData";
-import getAllReviews from "./customHooks/getAllReviews";
+// ✅ Rename these to start with "use"
+import useCurrentUser from "./customHooks/getCurrentUser";
+import useCourseData from "./customHooks/getCouseData";
+import useCreatorCourseData from "./customHooks/getCreatorCourseData";
+import useAllReviews from "./customHooks/getAllReviews";
 
 // ✅ CORRECT BACKEND URL
 export const serverUrl = "https://eduflex0-production.up.railway.app";
@@ -34,13 +35,11 @@ export const serverUrl = "https://eduflex0-production.up.railway.app";
 function App() {
   const { userData } = useSelector((state) => state.user);
 
-  // ✅ API calls MUST be inside useEffect
-  useEffect(() => {
-    getCurrentUser();
-    getCouseData();
-    getCreatorCourseData();
-    getAllReviews();
-  }, []);
+  // ✅ Hooks must be called at top-level
+  useCurrentUser();
+  useCourseData();
+  useCreatorCourseData();
+  useAllReviews();
 
   return (
     <>
