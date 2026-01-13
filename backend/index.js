@@ -17,18 +17,18 @@ dotenv.config();
 const app = express();
 
 /* =========================
-   DATABASE CONNECTION
+   DATABASE
 ========================= */
 connectDb();
 
 /* =========================
-   MIDDLEWARES
+   MIDDLEWARE
 ========================= */
 app.use(express.json());
 app.use(cookieParser());
 
 /* =========================
-   CORS CONFIGURATION
+   CORS
 ========================= */
 const allowedOrigins = [
   "http://localhost:3000",
@@ -40,10 +40,8 @@ const allowedOrigins = [
 app.use(
   cors({
     origin: (origin, callback) => {
-      // Allow server-to-server & tools like Postman
       if (!origin) return callback(null, true);
 
-      // Allow listed origins & all Vercel preview URLs
       if (
         allowedOrigins.includes(origin) ||
         origin.endsWith(".vercel.app")
@@ -51,7 +49,7 @@ app.use(
         return callback(null, true);
       }
 
-      return callback(new Error("Not allowed by CORS"));
+      callback(new Error("Not allowed by CORS"));
     },
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
@@ -59,7 +57,6 @@ app.use(
   })
 );
 
-// ✅ REQUIRED for preflight requests
 app.options("*", cors());
 
 /* =========================
@@ -73,14 +70,14 @@ app.use("/api/ai", aiRouter);
 app.use("/api/review", reviewRouter);
 
 /* =========================
-   ROOT TEST ROUTE
+   TEST ROUTE
 ========================= */
 app.get("/", (req, res) => {
   res.send("EduFlex0 Backend is running 🚀");
 });
 
 /* =========================
-   SERVER START
+   SERVER
 ========================= */
 const PORT = process.env.PORT || 8000;
 
