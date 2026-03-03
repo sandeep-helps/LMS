@@ -20,10 +20,10 @@ const connectDb = async () => {
 
     isConnected = db.connections[0].readyState === 1;
 
-    console.log("✅ MongoDB connected");
+    console.log("MongoDB connected");
   } catch (error) {
-    console.error("❌ MongoDB connection failed:", error.message);
-    throw error; // 🔥 VERY IMPORTANT
+    console.error("MongoDB connection failed:", error.message);
+    throw error; // VERY IMPORTANT
   }
 };
 

@@ -23,19 +23,19 @@ import SearchWithAi from "./pages/SearchWithAi";
 
 import ScrollToTop from "./components/ScrollToTop";
 
-// ✅ Rename these to start with "use"
+//  Rename these to start with "use"
 import useCurrentUser from "./customHooks/getCurrentUser";
 import useCourseData from "./customHooks/getCouseData";
 import useCreatorCourseData from "./customHooks/getCreatorCourseData";
 import useAllReviews from "./customHooks/getAllReviews";
 
-// ✅ CORRECT BACKEND URL
-export const serverUrl = "https://eduflex0-production.up.railway.app/";
+//  CORRECT BACKEND URL
+export const serverUrl = " http://localhost:4000";
 
 function App() {
   const { userData } = useSelector((state) => state.user);
 
-  // ✅ Hooks must be called at top-level
+  //  Hooks must be called at top-level
   useCurrentUser();
   useCourseData();
   useCreatorCourseData();
